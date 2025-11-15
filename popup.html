@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<!-- boiler plate written by github-copilot helped in adding tailwind css-->
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Popup</title>
+    <!-- Tailwind via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-black w-72 h-96 text-white flex flex-col justify-between p-4 cursor-pointer">
+    <nav class="flex items-center mb-3">
+        <img src="./flow-extension.PNG" alt="App Icon" class="h-12 w-12" />
+    </nav>
+    <div id="full-page" class="flex-grow flex flex-col justify-center items-start space-y-4 max-w-[240px]">
+        <div id="time-spent" class="bg-gray-800 rounded-xl p-3 shadow-inner text-center w-full">
+            <h2>Total time spent</h2>
+            <p id="total-time">0 minutes</p>
+        </div>
+        <div id="stats" class="bg-gray-800 rounded-xl p-3 shadow-inner w-full">
+            <h2 class="text-sm uppercase tracking-wider text-gray-400 mb-2">Top sites</h2>
+            <h2 class="bold text-gray-200">loading stats...</h2>
+        </div>
+
+
+        <footer class="text-center text-xs text-gray-500 mt-3">
+            Click anywhere to view full stats →
+        </footer>
+    </div>
+
+
+    <script src="popup.js" defer></script>
+    <script src="utils.js"></script>
+</body>
+
+</html>

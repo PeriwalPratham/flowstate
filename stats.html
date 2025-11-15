@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stats</title>
+    <!-- Tailwind via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 min-h-screen p-8">
+    <header class="mb-6">
+        <h1 class="text-2xl font-semibold">Stats Page</h1>
+        <p class="text-sm text-gray-500">Simple stats UI placeholder.</p>
+    </header>
+
+    <section id="statsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="p-4 bg-white rounded shadow">Stat A: <span id="statA">—</span></div>
+        <div class="p-4 bg-white rounded shadow">Stat B: <span id="statB">—</span></div>
+    </section>
+
+    <script src="stats.js" defer></script>
+</body>
+
+</html>

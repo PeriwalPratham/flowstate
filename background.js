@@ -1,146 +1,122 @@
-let currentdomain = null;
-let lastswitchtime = Date.now();
-
-// ---------------------------
-// TAB ACTIVATED
-// ---------------------------
-chrome.tabs.onActivated.addListener(async (activeInfo) => {
-    const tab = await chrome.tabs.get(activeInfo.tabId);
-    if (!tab.url) return;
-
-    let domain;
-    try {
-        const url = new URL(tab.url);
-        domain = url.hostname;
-    } catch {
-        return;
-    }
-
-    await handleNewDomain(domain);
-});
+// credit for chatgpt for helping with this code as i am not that good with js but good with html and css
 
 
-// ---------------------------
-// TAB UPDATED
-// ---------------------------
-chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-    if (changeInfo.status !== 'complete') return;
-    if (!tab.url) return;
-
-    let domain;
-    try {
-        const url = new URL(tab.url);
-        domain = url.hostname;
-    } catch {
-        return;
-    }
-
-    await handleNewDomain(domain);
-});
+let currentDomain = null;
+let lastSwitchTime = Date.now();
 
 
-// ---------------------------
-// GET DATE KEY
-// ---------------------------
 function getTodayKey() {
     return new Date().toISOString().split("T")[0];
 }
 
 
-// ---------------------------
-//       DOMAIN HANDLING
-// ---------------------------
-async function handleNewDomain(newDomain) {
+function normalizeDomain(raw) {
+    const parts = raw.split(".");
+    if (parts.length <= 2) return raw;
 
+    return parts.slice(parts.length - 2).join(".");
+}
+
+
+
+async function handleNewDomain(domain) {
     const today = getTodayKey();
+
+
     const stored = await chrome.storage.local.get(["times", "lastDate"]);
     let times = stored.times || {};
     let lastDate = stored.lastDate || today;
+
 
     if (today !== lastDate) {
         times = {};
     }
 
-    if (!times[today]) times[today] = {};
 
-    const now = Date.now();
-
-
-    if (!currentdomain) {
-        currentdomain = newDomain;
-        lastswitchtime = now;
+    if (!currentDomain) {
+        currentDomain = domain;
+        lastSwitchTime = Date.now();
         await chrome.storage.local.set({ times, lastDate: today });
         return;
     }
 
 
-    if (newDomain === currentdomain) {
-        return;
-    }
+    const now = Date.now();
+    const timeSpent = now - lastSwitchTime;
 
 
-    const timespent = now - lastswitchtime;
-
-    if (!times[today][currentdomain]) {
-        times[today][currentdomain] = 0;
-    }
-    times[today][currentdomain] += timespent;
+    if (!times[today]) times[today] = {};
+    if (!times[today][currentDomain]) times[today][currentDomain] = 0;
 
 
-    currentdomain = newDomain;
-    lastswitchtime = now;
+    times[today][currentDomain] += timeSpent;
 
-    await chrome.storage.local.set({
-        times,
-        lastDate: today
-    });
+
+    await chrome.storage.local.set({ times, lastDate: today });
+
+
+    currentDomain = domain;
+    lastSwitchTime = Date.now();
 }
 
 
+chrome.tabs.onActivated.addListener(async (activeInfo) => {
+    const tab = await chrome.tabs.get(activeInfo.tabId);
+    if (!tab || !tab.url) return;
 
-// ---------------------------
+    const url = new URL(tab.url);
+    const domain = normalizeDomain(url.hostname);
+
+    await handleNewDomain(domain);
+});
+
+
+
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+    if (changeInfo.status !== "complete") return;
+    if (!tab || !tab.url) return;
+
+    const url = new URL(tab.url);
+    const domain = normalizeDomain(url.hostname);
+
+    await handleNewDomain(domain);
+});
+
+
 setInterval(async () => {
-    if (!currentdomain) return;
+    if (!currentDomain) return;
 
     const today = getTodayKey();
     const stored = await chrome.storage.local.get(["times", "lastDate"]);
     let times = stored.times || {};
 
     if (!times[today]) times[today] = {};
-    if (!times[today][currentdomain]) times[today][currentdomain] = 0;
+    if (!times[today][currentDomain]) times[today][currentDomain] = 0;
 
     const now = Date.now();
-    const timespent = now - lastswitchtime;
-    lastswitchtime = now;
+    const timeSpent = now - lastSwitchTime;
+    lastSwitchTime = now;
 
-    times[today][currentdomain] += timespent;
+    times[today][currentDomain] += timeSpent;
 
-    await chrome.storage.local.set({
-        times,
-        lastDate: today
-    });
+    await chrome.storage.local.set({ times, lastDate: today });
 }, 15000);
 
 
-// ---------------------------
 chrome.runtime.onSuspend.addListener(async () => {
-    if (!currentdomain) return;
+    if (!currentDomain) return;
 
     const today = getTodayKey();
     const stored = await chrome.storage.local.get(["times", "lastDate"]);
     let times = stored.times || {};
 
     if (!times[today]) times[today] = {};
-    if (!times[today][currentdomain]) times[today][currentdomain] = 0;
+    if (!times[today][currentDomain]) times[today][currentDomain] = 0;
 
     const now = Date.now();
-    const timespent = now - lastswitchtime;
+    const timeSpent = now - lastSwitchTime;
 
-    times[today][currentdomain] += timespent;
+    times[today][currentDomain] += timeSpent;
 
-    await chrome.storage.local.set({
-        times,
-        lastDate: today
-    });
+    await chrome.storage.local.set({ times, lastDate: today });
 });
-// ---------------------------                      

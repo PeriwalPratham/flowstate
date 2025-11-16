@@ -1,0 +1,15 @@
+{
+    "name": "flowstate",
+    "version": "1.0.0",
+    "description": "FlowState browser extension",
+    "private": true,
+    "scripts": {
+        "build:css": "npx tailwindcss -i ./src/styles/tailwind.css -o ./dist/tailwind.css --minify",
+        "watch:css": "npx tailwindcss -i ./src/styles/tailwind.css -o ./dist/tailwind.css --watch"
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.4.14",
+        "postcss": "^8.4.26",
+        "tailwindcss": "^3.5.5"
+    }
+}

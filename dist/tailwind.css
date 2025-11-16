@@ -1,0 +1,288 @@
+/* Minimal, prebuilt Tailwind-like utilities used by the extension pages.
+   This file is intentionally small — it contains only the classes used
+   in `content.html`, `popup.html`, and `stats.html` so the extension
+   works immediately without a CDN or build step. */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Colors */
+.bg-gray-50 {
+    background-color: #F9FAFB;
+}
+
+.bg-white {
+    background-color: #ffffff;
+}
+
+.bg-black {
+    background-color: #000000;
+}
+
+.bg-gray-800 {
+    background-color: #1F2937;
+}
+
+.bg-blue-600 {
+    background-color: #2563EB;
+}
+
+.bg-blue-700 {
+    background-color: #1D4ED8;
+}
+
+.text-white {
+    color: #ffffff;
+}
+
+.text-gray-600 {
+    color: #4B5563;
+}
+
+.text-gray-500 {
+    color: #6B7280;
+}
+
+.text-gray-400 {
+    color: #9CA3AF;
+}
+
+.text-gray-200 {
+    color: #E5E7EB;
+}
+
+/* Layout */
+.min-h-screen {
+    min-height: 100vh;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.items-start {
+    align-items: flex-start;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.flex-grow {
+    flex: 1 1 auto;
+}
+
+.w-full {
+    width: 100%;
+}
+
+.w-12 {
+    width: 3rem;
+}
+
+.h-12 {
+    height: 3rem;
+}
+
+.w-72 {
+    width: 18rem;
+}
+
+.h-96 {
+    height: 24rem;
+}
+
+.max-w-xl {
+    max-width: 36rem;
+}
+
+.max-w-\[240px\] {
+    max-width: 240px;
+}
+
+.grid {
+    display: grid;
+}
+
+.grid-cols-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.gap-4 {
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .sm\:grid-cols-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Spacing */
+.p-8 {
+    padding: 2rem;
+}
+
+.p-6 {
+    padding: 1.5rem;
+}
+
+.p-4 {
+    padding: 1rem;
+}
+
+.p-3 {
+    padding: 0.75rem;
+}
+
+.px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.py-2 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.mb-3 {
+    margin-bottom: 0.75rem;
+}
+
+.mb-6 {
+    margin-bottom: 1.5rem;
+}
+
+.mt-3 {
+    margin-top: 0.75rem;
+}
+
+.space-y-4>*+* {
+    margin-top: 1rem;
+}
+
+/* Typography */
+.text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+}
+
+.font-semibold {
+    font-weight: 600;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.tracking-wider {
+    letter-spacing: 0.05em;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Borders & radius */
+.rounded {
+    border-radius: 0.25rem;
+}
+
+.rounded-lg {
+    border-radius: 0.5rem;
+}
+
+.rounded-xl {
+    border-radius: 0.75rem;
+}
+
+/* Shadows */
+.shadow {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.shadow-inner {
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* Utility */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.items-start {
+    align-items: flex-start;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+/* Button colors & hover */
+.bg-blue-600 {
+    background-color: #2563EB;
+}
+
+.hover\:bg-blue-700:hover {
+    background-color: #1D4ED8;
+}
+
+/* small helpers used on popup */
+.text-gray-400 {
+    color: #9CA3AF;
+}
+
+.text-gray-200 {
+    color: #E5E7EB;
+}
+
+.text-gray-500 {
+    color: #6B7280;
+}
+
+/* make images and media fit */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}

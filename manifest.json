@@ -38,7 +38,9 @@
                 "utils/*",
                 "popup/*",
                 "icons/*",
-                "dist/*"
+                "dist/*",
+                "dashboard.html",
+                "dashboard.js"
             ],
             "matches": [
                 "<all_urls>"

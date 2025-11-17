@@ -14,23 +14,18 @@ async function initDashboard() {
 async function updateStats() {
     const stored = await chrome.storage.local.get(["times"]);
     const times = stored.times || {};
-
-    // Calculate today's total
     const today = new Date().toISOString().split("T")[0];
     const todayData = times[today] || {};
 
-    // Calculate all-time stats
     let totalSessions = 0;
     let totalMins = 0;
     const dailyTotals = [];
-
     for (const [date, domains] of Object.entries(times)) {
         const dayMins = Object.values(domains).reduce((sum, ms) => sum + Math.round(ms / 60000), 0);
         totalMins += dayMins;
         totalSessions += Object.keys(domains).length;
         dailyTotals.push(dayMins);
     }
-
     const avgDaily = dailyTotals.length > 0 ? Math.round(totalMins / dailyTotals.length) : 0;
 
     const totalUsageEl = document.getElementById("totalUsage");
@@ -43,14 +38,12 @@ async function updateStats() {
     if (avgDailyEl) avgDailyEl.textContent = formatTime(avgDaily);
     if (globalAvgEl) globalAvgEl.textContent = formatTime(Math.round(avgDaily * 0.8)); // Simulated global avg
 }
-
 function formatTime(minutes) {
     if (minutes < 60) return `${minutes}m`;
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     return `${hours}h ${mins}m`;
 }
-
 function setupChartTabs() {
     document.querySelectorAll(".chart-tab").forEach(tab => {
         tab.addEventListener("click", async (e) => {
@@ -60,7 +53,6 @@ function setupChartTabs() {
         });
     });
 }
-
 async function drawChart(period) {
     const stored = await chrome.storage.local.get(["times"]);
     const times = stored.times || {};
@@ -112,7 +104,6 @@ async function drawChart(period) {
             d.setDate(d.getDate() - i);
             days.push(d.toISOString().split("T")[0]);
         }
-
         labels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
         data = days.map(day => {
             const dayData = times[day] || {};
@@ -129,7 +120,6 @@ async function drawChart(period) {
             const weekNum = 12 - i;
             labels.push(`Wk ${weekNum}`);
         }
-
         data = weeks.map(weekStart => {
             let weekTotal = 0;
             for (let i = 0; i < 7; i++) {
@@ -142,15 +132,11 @@ async function drawChart(period) {
             return weekTotal;
         });
     }
-
     renderLineChart("usageChart", labels, data);
 }
-
 function renderLineChart(canvasId, labels, data) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
-
-    // set size
     const parent = canvas.parentElement || canvas;
     const width = Math.max(400, parent.clientWidth || 600);
     const height = 300; // fixed height
@@ -163,28 +149,26 @@ function renderLineChart(canvasId, labels, data) {
 
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-
-    // scale for high DPI
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    // clear
+
     ctx.clearRect(0, 0, width, height);
 
-    // styles and layout
+
     const padding = { left: 48, right: 20, top: 20, bottom: 40 };
     const chartW = width - padding.left - padding.right;
     const chartH = height - padding.top - padding.bottom;
 
-    // compute scale
+
     const maxVal = Math.max(5, ...data);
     const steps = 5;
     const stepVal = Math.ceil(maxVal / steps) || 1;
 
-    // background
+
     ctx.fillStyle = "#141414";
     ctx.fillRect(padding.left, padding.top, chartW, chartH);
 
-    // grid lines and y labels
+
     ctx.strokeStyle = "#1f1f1f";
     ctx.fillStyle = "#888";
     ctx.font = "12px Lora, Georgia, serif";
@@ -199,7 +183,7 @@ function renderLineChart(canvasId, labels, data) {
         ctx.fillText(label.toString(), padding.left - 8, y + 4);
     }
 
-    // x labels
+
     ctx.textAlign = "center";
     const pointGap = labels.length > 1 ? chartW / (labels.length - 1) : chartW;
     labels.forEach((lab, i) => {
@@ -208,7 +192,7 @@ function renderLineChart(canvasId, labels, data) {
         ctx.fillText(lab, x, padding.top + chartH + 20);
     });
 
-    // draw polyline
+
     ctx.beginPath();
     for (let i = 0; i < data.length; i++) {
         const x = padding.left + i * pointGap;
@@ -220,7 +204,7 @@ function renderLineChart(canvasId, labels, data) {
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // fill area under curve
+
     if (data.length > 0) {
         ctx.lineTo(padding.left + chartW, padding.top + chartH);
         ctx.lineTo(padding.left, padding.top + chartH);
@@ -232,7 +216,7 @@ function renderLineChart(canvasId, labels, data) {
         ctx.fill();
     }
 
-    // draw points
+
     for (let i = 0; i < data.length; i++) {
         const x = padding.left + i * pointGap;
         const y = padding.top + chartH - (data[i] / Math.max(1, maxVal)) * chartH;

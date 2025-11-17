@@ -1,12 +1,9 @@
 document.addEventListener("DOMContentLoaded", loadStats);
-
 async function loadStats() {
     const today = new Date().toISOString().split("T")[0];
-
     const stored = await chrome.storage.local.get(["times"]);
     const times = stored.times || {};
     const todayData = times[today] || {};
-
     const siteList = document.getElementById("siteList");
     siteList.innerHTML = "";
 
@@ -18,12 +15,10 @@ async function loadStats() {
         .map(([domain, ms]) => [domain, Math.round(ms / 60000)])
         .filter(([domain, mins]) => mins > 0)
         .sort((a, b) => b[1] - a[1]);
-
     for (const [domain, mins] of list) {
         const li = document.createElement("li");
         li.className = "site-item";
         li.style.cursor = "pointer";
-
         const siteInfo = document.createElement("div");
         siteInfo.className = "site-info";
 
@@ -33,23 +28,18 @@ async function loadStats() {
         icon.onerror = function () {
             this.style.display = "none";
         };
-
         const name = document.createElement("div");
         name.className = "site-name";
         name.textContent = domain;
-
         const time = document.createElement("div");
         time.className = "site-time";
         time.textContent = `${mins} min`;
-
         siteInfo.appendChild(icon);
         siteInfo.appendChild(name);
         li.appendChild(siteInfo);
         li.appendChild(time);
         siteList.appendChild(li);
     }
-
-    // Add click listener to open dashboard
     document.getElementById("stats").addEventListener("click", () => {
         chrome.tabs.create({ url: chrome.runtime.getURL("dashboard.html") });
     });

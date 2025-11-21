@@ -1,5 +1,14 @@
-# YOUR PROJECT TITLE
+# Flowstate
 #### Video Demo:  <https://youtu.be/7TkFpSMULqE>
 #### Description:
 
-This is my **CS50** *Final porject*.It is called "flowstate" - a multipurpose chrome extension meant to solve all your productivity problems in the simplest way possible by making you aware of them.It's main function is to track your time spend on chrome,on each website you visit showing the time spent *active* on the website
+This is my **CS50** *Final project*.It is called "flowstate" - a multipurpose chrome extension meant to solve all your productivity problems in the simplest way possible by making you aware of them.It's main function is to track your time spend on chrome,on each website you visit showing the time spent *active* on the website measured in minutes and resetted every single day.Using a clean popup ui which opens all the time you have spent today by first showing the total time spent.Which when clicked opens a full page with the total time written again followed by the amount of time/sessions you have used the device for if you scroll down you will a graph which shows time spent per hour on a hourly/daily/weekly basis though note that this maybe inaccurate.On the left hand side of the content you will see a navbar showing what page you are on.As of writing this only the page you are currently on will work but in the future all and even more shall work providing an unprecedented experience including more features like *in-app blocking*,*usage limit*,and **More!!**.
+
+
+Lets take an example of using this chrome extension.This is timmy he wants to improve his productivity online so he scrolls the chrome web store(yes it will be publically released soon)he finds this extensions and gives it a try with its simple ui he understands what it does almost instantly.With this tool now in his aresenal he goes and continues his intenet life as normal watching videos on youtube playing some online games studying a bit and so on.....At the end of the day he opens up the extension to understand and analyse.He realises that he only spent 1hr actually studying but over 3HRs watching youtube, knowledge he would have never gained if he had never used this chrome extension.With this knowledge and when he wasted this time(utilising the graph).The next day the time he wasted arives again but this time he knows he might waste it so he start studying before and saves time which would have previuosly been wasted.
+
+Technical Version
+
+Now techenically speaking this chrome extension run's on some quite simple code utilising chrome storage and chrome's inbuilt features which are first used by written in `manifest.json`
+in this I have taken permission from chrome and the user to use certain data *note-I used chatgpt and copilot to help with this as i dont understand json that well* due to this `manifest.json` I can use things like this in my js `chrome.storage.local.get` which is very important for tracking the time,storing the data **locally** so that I dont need to host my own servers and lose money on a free project!.On the design side of things I planned to use tailwind css but failed so instead finalised on just using plain css as it gives me more custamisablilty   
+

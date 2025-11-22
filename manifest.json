@@ -26,6 +26,12 @@
         "storage",
         "tabs",
         "alarms",
-        "idle"
+        "idle",
+        "notifications",
+        "scripting",
+        "activeTab"
+    ],
+    "host_permissions": [
+        "<all_urls>"
     ]
 }

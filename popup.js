@@ -39,6 +39,19 @@ async function loadStats() {
         li.appendChild(siteInfo);
         li.appendChild(time);
         siteList.appendChild(li);
+        // clicking a site toggles block for that domain
+        li.addEventListener('click', async () => {
+            const stored = await chrome.storage.local.get(['blocked']);
+            const blocked = stored.blocked || {};
+            if (blocked[domain]) {
+                delete blocked[domain];
+                li.style.opacity = 1;
+            } else {
+                blocked[domain] = true;
+                li.style.opacity = 0.6;
+            }
+            await chrome.storage.local.set({ blocked });
+        });
     }
     document.getElementById("stats").addEventListener("click", () => {
         chrome.tabs.create({ url: chrome.runtime.getURL("dashboard.html") });

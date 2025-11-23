@@ -37,12 +37,16 @@ async function handleNewDomain(domain) {
 
 async function getBlockedInfo() {
     const stored = await chrome.storage.local.get(["blocked"]);
+    // blocked is now stored as { domain: { added: <timestamp> } }
     return { blocked: stored.blocked || {} };
 }
 
 async function isDomainBlocked(domain) {
     const { blocked } = await getBlockedInfo();
-    return !!blocked[domain];
+    if (!blocked || !blocked[domain]) return false;
+    // allow blocked value to be either boolean (legacy) or object
+    const val = blocked[domain];
+    return !!(val === true || (val && val.added));
 }
 
 async function redirectToBlocker(tabId, originalUrl, domain) {

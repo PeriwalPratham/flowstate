@@ -247,9 +247,29 @@ async function refreshBlockedList() {
         li.style.background = '#141414';
         li.style.border = '1px solid #242424';
         li.style.borderRadius = '8px';
-        const span = document.createElement('div');
-        span.textContent = d;
-        span.style.color = '#fff';
+
+        const left = document.createElement('div');
+        left.style.display = 'flex';
+        left.style.flexDirection = 'column';
+
+        const domainEl = document.createElement('div');
+        domainEl.textContent = d;
+        domainEl.style.color = '#fff';
+        domainEl.style.fontWeight = '600';
+
+        const metaEl = document.createElement('div');
+        metaEl.style.fontSize = '12px';
+        metaEl.style.color = '#bdbdbd';
+        const entry = blocked[d];
+        if (entry && entry.added) {
+            metaEl.textContent = `Added: ${new Date(entry.added).toLocaleString()}`;
+        } else {
+            metaEl.textContent = 'Added: unknown';
+        }
+
+        left.appendChild(domainEl);
+        left.appendChild(metaEl);
+
         const btns = document.createElement('div');
         const remove = document.createElement('button');
         remove.textContent = 'Remove';
@@ -262,7 +282,7 @@ async function refreshBlockedList() {
             refreshBlockedList();
         });
         btns.appendChild(remove);
-        li.appendChild(span);
+        li.appendChild(left);
         li.appendChild(btns);
         listEl.appendChild(li);
     }
@@ -271,17 +291,33 @@ async function refreshBlockedList() {
 document.addEventListener('DOMContentLoaded', () => {
     const addBtn = document.getElementById('addBlockBtn');
     const input = document.getElementById('blockInput');
+    const msg = document.getElementById('blockMsg');
     if (addBtn && input) {
         addBtn.addEventListener('click', async () => {
             let v = input.value.trim().toLowerCase();
-            if (!v) return;
+            if (!v) {
+                if (msg) msg.textContent = 'Enter a domain to block.';
+                return;
+            }
             // sanitize domain
             v = v.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
+            if (!v) {
+                if (msg) msg.textContent = 'Invalid domain.';
+                return;
+            }
             const s = await chrome.storage.local.get(['blocked']);
             const b = s.blocked || {};
-            b[v] = true;
+            if (b[v]) {
+                if (msg) msg.textContent = `${v} is already blocked.`;
+                return;
+            }
+            b[v] = { added: Date.now() };
             await chrome.storage.local.set({ blocked: b });
             input.value = '';
+            if (msg) {
+                msg.textContent = `${v} blocked.`;
+                setTimeout(() => { msg.textContent = ''; }, 2500);
+            }
             refreshBlockedList();
         });
     }

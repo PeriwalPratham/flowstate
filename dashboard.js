@@ -229,3 +229,61 @@ function renderLineChart(canvasId, labels, data) {
         ctx.stroke();
     }
 }
+
+// Blocking management UI
+async function refreshBlockedList() {
+    const stored = await chrome.storage.local.get(['blocked']);
+    const blocked = stored.blocked || {};
+    const listEl = document.getElementById('blockedList');
+    if (!listEl) return;
+    listEl.innerHTML = '';
+    const entries = Object.keys(blocked).sort();
+    for (const d of entries) {
+        const li = document.createElement('li');
+        li.style.display = 'flex';
+        li.style.justifyContent = 'space-between';
+        li.style.alignItems = 'center';
+        li.style.padding = '8px';
+        li.style.background = '#141414';
+        li.style.border = '1px solid #242424';
+        li.style.borderRadius = '8px';
+        const span = document.createElement('div');
+        span.textContent = d;
+        span.style.color = '#fff';
+        const btns = document.createElement('div');
+        const remove = document.createElement('button');
+        remove.textContent = 'Remove';
+        remove.className = 'btn btn-secondary';
+        remove.addEventListener('click', async () => {
+            const s = await chrome.storage.local.get(['blocked']);
+            const b = s.blocked || {};
+            delete b[d];
+            await chrome.storage.local.set({ blocked: b });
+            refreshBlockedList();
+        });
+        btns.appendChild(remove);
+        li.appendChild(span);
+        li.appendChild(btns);
+        listEl.appendChild(li);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const addBtn = document.getElementById('addBlockBtn');
+    const input = document.getElementById('blockInput');
+    if (addBtn && input) {
+        addBtn.addEventListener('click', async () => {
+            let v = input.value.trim().toLowerCase();
+            if (!v) return;
+            // sanitize domain
+            v = v.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
+            const s = await chrome.storage.local.get(['blocked']);
+            const b = s.blocked || {};
+            b[v] = true;
+            await chrome.storage.local.set({ blocked: b });
+            input.value = '';
+            refreshBlockedList();
+        });
+    }
+    refreshBlockedList();
+});

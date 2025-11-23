@@ -302,6 +302,25 @@
 
         <div class="chart-container">
             <div class="chart-header">
+                <h2>Blocking</h2>
+                <div class="chart-tabs">
+                </div>
+            </div>
+            <div style="background:#0b0b0b;border:1px solid #242424;padding:18px;border-radius:10px;">
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <input id="blockInput" placeholder="example.com"
+                        style="flex:1;padding:8px;border-radius:8px;border:1px solid #222;background:#0f0f0f;color:#fff" />
+                    <button id="addBlockBtn" class="btn btn-primary">Add</button>
+                </div>
+                <div style="height:12px"></div>
+                <ul id="blockedList"
+                    style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px;max-height:220px;overflow:auto">
+                </ul>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-header">
                 <h2>Usage Over Time</h2>
                 <div class="chart-tabs">
                     <button class="chart-tab active" data-period="hourly">Hourly</button>
